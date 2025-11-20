@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Priskalkulator Regnskap</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+    <nav class="glass-header">
+        <div class="nav-grid">
+            <div class="logo-container">
+                <div class="logo">Systemkalkulator</div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="dashboard-grid">
+
+        <!-- CONTROLS -->
+        <section class="controls-panel">
+
+            <!-- 1. VOLUM & BRUKERE -->
+            <div class="glass-card">
+                <div class="group-header">
+                    <label>1. Volum & Brukere</label>
+                </div>
+
+                <!-- Bilag -->
+                <div class="interactive-input-wrapper">
+                    <input type="number" id="bilag-input" value="0" min="0">
+                    <span class="unit-label" id="bilag-unit-text">bilag / år</span>
+                </div>
+                <div class="slider-wrapper">
+                    <input type="range" id="bilag-slider" class="styled-slider" min="0" max="10000" value="0" step="10">
+                </div>
+
+                <div class="input-spacer"></div>
+
+                <!-- NYTT FELT: Systembrukere -->
+                <label class="sub-label">Antall systembrukere (Admin/Regnskap)</label>
+                <div class="interactive-input-wrapper">
+                    <input type="number" id="users-input" value="1" min="0" max="50">
+                    <span class="unit-label">brukere</span>
+                </div>
+                <div class="slider-wrapper">
+                    <input type="range" id="users-slider" class="styled-slider" min="0" max="50" value="1" step="1">
+                </div>
+            </div>
+
+            <!-- 2. LØNN -->
+            <div class="glass-card">
+                <div class="toggle-row">
+                    <label class="toggle-label">2. Trenger du lønnskjøring?</label>
+                    <label class="switch">
+                        <input type="checkbox" id="check-payroll">
+                        <span class="slider-switch"></span>
+                    </label>
+                </div>
+
+                <div id="payroll-container" class="collapsed-content">
+                    <div class="input-spacer"></div>
+                    <label class="sub-label">Antall ansatte (Lønnsmottakere)</label>
+                    <div class="interactive-input-wrapper">
+                        <input type="number" id="ansatte-input" value="1" min="1">
+                        <span class="unit-label">ansatte</span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" id="ansatte-slider" class="styled-slider" min="1" max="50" value="1"
+                            step="1">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. BRANSJE & MODULER -->
+            <div class="glass-card">
+                <label class="section-title">3. Bransje & Moduler</label>
+
+                <div class="select-wrapper">
+                    <select id="select-industry">
+                        <option value="standard">Ingen bransjeløsning</option>
+                        <option value="elektro">Elektro (Krever ordre)</option>
+                        <option value="vvs">VVS (Krever ordre)</option>
+                        <option value="landbruk">Landbruk</option>
+                    </select>
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-card-wrapper">
+                        <input type="checkbox" id="check-time">
+                        <div class="check-content">
+                            <span class="check-title">Timeføring</span>
+                        </div>
+                    </label>
+
+                    <label class="checkbox-card-wrapper">
+                        <input type="checkbox" id="check-travel">
+                        <div class="check-content">
+                            <span class="check-title">Reiseregning</span>
+                        </div>
+                    </label>
+
+                    <label class="checkbox-card-wrapper">
+                        <input type="checkbox" id="check-project">
+                        <div class="check-content">
+                            <span class="check-title">Prosjektstyring</span>
+                        </div>
+                    </label>
+
+                    <label class="checkbox-card-wrapper">
+                        <input type="checkbox" id="check-logistics">
+                        <div class="check-content">
+                            <span class="check-title">Lager & Logistikk</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 4. TYPE KUNDEFORHOLD -->
+            <div class="glass-card">
+                <label class="section-title">4. Oppstart</label>
+
+                <div class="radio-group">
+                    <label class="radio-card">
+                        <input type="radio" name="setup-type" value="new" checked>
+                        <div class="radio-content">
+                            <span class="radio-title">Ny kunde (Oppstart)</span>
+                            <span class="radio-desc">Etablering: 3 890,-</span>
+                        </div>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="setup-type" value="switch">
+                        <div class="radio-content">
+                            <span class="radio-title">Bytte system</span>
+                            <span class="radio-desc">Etablering: 1 789,-</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- RESULTS AREA -->
+        <section class="results-area">
+
+            <div class="cards-container">
+
+                <!-- Tripletex -->
+                <div class="pricing-card" id="card-tripletex">
+                    <div class="badges-container"></div>
+                    <div class="card-header">
+                        <h3>Tripletex</h3>
+                        <div class="package-container" id="tt-packages"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="price-large">
+                            <span id="tt-monthly">0</span>
+                            <small>kr/mnd</small>
+                        </div>
+                        <ul class="specs-list" id="tt-details"></ul>
+                        <div class="tx-info" id="tt-tx"></div>
+                    </div>
+                    <div class="card-footer">
+                        <div id="tt-setup-container" class="setup-container"></div>
+
+                        <div class="year-one">
+                            <span>Totalt år 1:</span>
+                            <strong id="tt-yearly">-</strong>
+                        </div>
+                        <small>Inkl. 12 mnd drift + total etablering</small>
+                        <div class="warnings" id="tt-warnings"></div>
+                    </div>
+                </div>
+
+                <!-- PowerOffice Go -->
+                <div class="pricing-card" id="card-po">
+                    <div class="badges-container"></div>
+                    <div class="card-header">
+                        <h3>PowerOffice Go</h3>
+                        <div class="package-container" id="po-packages"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="price-large">
+                            <span id="po-monthly">0</span>
+                            <small>kr/mnd</small>
+                        </div>
+                        <ul class="specs-list" id="po-details"></ul>
+                        <div class="tx-info" id="po-tx"></div>
+                    </div>
+                    <div class="card-footer">
+                        <div id="po-setup-container" class="setup-container"></div>
+                        <div class="year-one">
+                            <span>Totalt år 1:</span>
+                            <strong id="po-yearly">-</strong>
+                        </div>
+                        <small>Inkl. 12 mnd drift + total etablering</small>
+                        <div class="warnings" id="po-warnings"></div>
+                    </div>
+                </div>
+
+                <!-- Sparebank 1 Regnskap -->
+                <div class="pricing-card" id="card-sb1">
+                    <div class="badges-container"></div>
+                    <div class="card-header">
+                        <h3>Sparebank 1 Regnskap</h3>
+                        <div class="package-container" id="sb1-packages"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="price-large">
+                            <span id="sb1-monthly">0</span>
+                            <small>kr/mnd</small>
+                        </div>
+                        <ul class="specs-list" id="sb1-details"></ul>
+                        <div class="tx-info" id="sb1-tx"></div>
+                    </div>
+                    <div class="card-footer">
+                        <div id="sb1-setup-container" class="setup-container"></div>
+                        <div class="year-one">
+                            <span>Totalt år 1:</span>
+                            <strong id="sb1-yearly">-</strong>
+                        </div>
+                        <small>Inkl. 12 mnd drift + total etablering</small>
+                        <div class="warnings" id="sb1-warnings"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <p class="disclaimer">
+                * Prisene er estimater ekskl. mva. "Totalt år 1" inkluderer månedskostnader x 12 pluss valgt
+                etableringsgebyr og systemspesifikke kostnader. Faktiske transaksjonskostnader vil variere etter bruk.
+            </p>
+        </section>
+    </main>
+
+    <!-- MODAL FOR PACKAGE DETAILS -->
+    <div id="package-modal" class="modal hidden">
+        <div class="modal-content glass-card">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            <h3 id="modal-title">Pakkenavn</h3>
+            <p class="modal-subtitle" id="modal-system">Systemnavn</p>
+            <div class="modal-body">
+                <ul id="modal-features-list">
+                    <!-- Fylles via JS -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal()"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

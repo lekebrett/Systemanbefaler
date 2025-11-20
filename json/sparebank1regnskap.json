@@ -1,0 +1,113 @@
+{
+    "sparebank1_regnskap": {
+        "packages": [
+            {
+                "name": "Basis",
+                "baseMonthly": 159,
+                "bilagIncludedPerYear": 150,
+                "bilagUnlimited": false,
+                "mainFeatures": [
+                    "bankmodul",
+                    "salgsmodul_begrenset",
+                    "kjopsmodul_begrenset",
+                    "regnskap_begrenset"
+                ]
+            },
+            {
+                "name": "Basis+",
+                "baseMonthly": 329,
+                "bilagIncludedPerYear": "unlimited",
+                "bilagUnlimited": true,
+                "mainFeatures": [
+                    "alle_basis_funksjoner",
+                    "lønn",
+                    "ulebegrenset_bilag",
+                    "avansert_salg",
+                    "purring_og_inkasso",
+                    "redigerbar_kontoplan"
+                ]
+            },
+            {
+                "name": "Komplett",
+                "baseMonthly": 490,
+                "bilagIncludedPerYear": "unlimited",
+                "bilagUnlimited": true,
+                "mainFeatures": [
+                    "alle_basis_plus_funksjoner",
+                    "viderefakturering",
+                    "godkjenningsflyt",
+                    "fordelingsnøkler",
+                    "egendefinerte_dimensjoner",
+                    "egendefinerte_nummerserier",
+                    "avanserte_datauttrekk"
+                ]
+            }
+        ],
+        "additionalModules": [
+            {
+                "module": "timeregistrering",
+                "type": "perUserMonthly",
+                "price": 54,
+                "requirements": [
+                    "Basis+",
+                    "Komplett"
+                ]
+            },
+            {
+                "module": "fravær",
+                "type": "perItem",
+                "price": 4,
+                "requirements": [
+                    "Basis+",
+                    "Komplett"
+                ]
+            }
+        ],
+        "transactions": [
+            {
+                "type": "betaling",
+                "price": 4
+            },
+            {
+                "type": "faktura",
+                "price": 8
+            },
+            {
+                "type": "efaktura",
+                "price": 8
+            },
+            {
+                "type": "fakturaprint",
+                "price": 25
+            }
+        ],
+        "userTypes": [
+            {
+                "type": "ekstra_bruker",
+                "priceMonthly": 54
+            },
+            {
+                "type": "timebruker",
+                "priceMonthly": 54
+            }
+        ],
+        "usagePricing": [
+            {
+                "item": "reiseregning",
+                "pricePerItem": 33
+            },
+            {
+                "item": "fraværsregistrering",
+                "pricePerItem": 4
+            },
+            {
+                "item": "lønnsslipp",
+                "pricePerItem": 39
+            }
+        ],
+        "rules": {
+            "pricesExVAT": true,
+            "note": "Basis har 150 bilag/år, Basis+ og Komplett har ubegrenset."
+        }
+    }
+}

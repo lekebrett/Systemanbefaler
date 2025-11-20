@@ -1,0 +1,399 @@
+{
+  "tripletex": {
+    "packages": [
+      {
+        "name": "Basis",
+        "baseMonthly": 179,
+        "establishmentFee": 0,
+        "modulesIncluded": [
+          "faktura",
+          "regnskap",
+          "mobilapp",
+          "support"
+        ],
+        "bilagIncluded": 500,
+        "bilagPricing": [
+          {
+            "bilag_low": 501,
+            "bilag_high": 1000,
+            "priceMonthly": 200
+          },
+          {
+            "bilag_low": 1001,
+            "bilag_high": 2000,
+            "priceMonthly": 340
+          },
+          {
+            "bilag_low": 2001,
+            "bilag_high": 3500,
+            "priceMonthly": 510
+          },
+          {
+            "bilag_low": 3501,
+            "bilag_high": 5000,
+            "priceMonthly": 710
+          },
+          {
+            "bilag_low": 5001,
+            "bilag_high": 10000,
+            "priceMonthly": 980
+          },
+          {
+            "bilag_low": 10001,
+            "bilag_high": null,
+            "priceMonthly": 1300
+          }
+        ]
+      },
+      {
+        "name": "Smart",
+        "baseMonthly": 279,
+        "establishmentFee": 450,
+        "modulesIncluded": [
+          "faktura",
+          "regnskap",
+          "mobilapp",
+          "support",
+          "smart automatikk",
+          "lønn",
+          "reise",
+          "time"
+        ],
+        "integrationAddonAvailable": true,
+        "integrationAddonPriceMonthly": 129,
+        "bilagIncluded": 500,
+        "bilagPricing": [
+          {
+            "bilag_low": 501,
+            "bilag_high": 1000,
+            "priceMonthly": 200
+          },
+          {
+            "bilag_low": 1001,
+            "bilag_high": 2000,
+            "priceMonthly": 340
+          },
+          {
+            "bilag_low": 2001,
+            "bilag_high": 3500,
+            "priceMonthly": 510
+          },
+          {
+            "bilag_low": 3501,
+            "bilag_high": 5000,
+            "priceMonthly": 710
+          },
+          {
+            "bilag_low": 5001,
+            "bilag_high": 10000,
+            "priceMonthly": 980
+          },
+          {
+            "bilag_low": 10001,
+            "bilag_high": null,
+            "priceMonthly": 1300
+          }
+        ]
+      },
+      {
+        "name": "Pro",
+        "baseMonthly": 479,
+        "establishmentFee": 450,
+        "modulesIncluded": [
+          "faktura",
+          "regnskap",
+          "mobilapp",
+          "support",
+          "smart automatikk",
+          "lønn",
+          "reise",
+          "time",
+          "integrasjoner",
+          "avansert regnskap",
+          "prioritert support"
+        ],
+        "bilagIncluded": 500,
+        "bilagPricing": [
+          {
+            "bilag_low": 501,
+            "bilag_high": 1000,
+            "priceMonthly": 200
+          },
+          {
+            "bilag_low": 1001,
+            "bilag_high": 2000,
+            "priceMonthly": 340
+          },
+          {
+            "bilag_low": 2001,
+            "bilag_high": 3500,
+            "priceMonthly": 510
+          },
+          {
+            "bilag_low": 3501,
+            "bilag_high": 5000,
+            "priceMonthly": 710
+          },
+          {
+            "bilag_low": 5001,
+            "bilag_high": 10000,
+            "priceMonthly": 980
+          },
+          {
+            "bilag_low": 10001,
+            "bilag_high": null,
+            "priceMonthly": 1300
+          }
+        ]
+      },
+      {
+        "name": "Komplett",
+        "baseMonthly": 629,
+        "establishmentFee": 450,
+        "modulesIncluded": [
+          "faktura",
+          "regnskap",
+          "mobilapp",
+          "support",
+          "smart automatikk",
+          "lønn",
+          "reise",
+          "time",
+          "integrasjoner",
+          "avansert regnskap",
+          "prioritert support",
+          "prosjektstyring",
+          "prosjektbudsjett",
+          "prosjektfakturering"
+        ],
+        "bilagIncluded": 500,
+        "bilagPricing": [
+          {
+            "bilag_low": 501,
+            "bilag_high": 1000,
+            "priceMonthly": 200
+          },
+          {
+            "bilag_low": 1001,
+            "bilag_high": 2000,
+            "priceMonthly": 340
+          },
+          {
+            "bilag_low": 2001,
+            "bilag_high": 3500,
+            "priceMonthly": 510
+          },
+          {
+            "bilag_low": 3501,
+            "bilag_high": 5000,
+            "priceMonthly": 710
+          },
+          {
+            "bilag_low": 5001,
+            "bilag_high": 10000,
+            "priceMonthly": 980
+          },
+          {
+            "bilag_low": 10001,
+            "bilag_high": null,
+            "priceMonthly": 1300
+          }
+        ]
+      }
+    ],
+    "industryAddons": [
+      {
+        "name": "Landbruk",
+        "industry": "landbruk",
+        "extraMonthly": 0,
+        "establishmentFee": 0,
+        "usesBasePackageBilagModel": true,
+        "modulesIncluded": [
+          "tilpasset landbruk"
+        ]
+      },
+      {
+        "name": "Elektro",
+        "industry": "elektro",
+        "extraMonthly": 0,
+        "establishmentFee": 2200,
+        "modulesIncluded": [
+          "grossistintegrasjon",
+          "kontrollskjema",
+          "sjekklister"
+        ],
+        "bilagPricingOverride": [
+          {
+            "bilag_low": 0,
+            "bilag_high": 500,
+            "priceMonthly": 699
+          },
+          {
+            "bilag_low": 501,
+            "bilag_high": 1000,
+            "priceMonthly": 899
+          },
+          {
+            "bilag_low": 1001,
+            "bilag_high": 2000,
+            "priceMonthly": 1039
+          },
+          {
+            "bilag_low": 2001,
+            "bilag_high": 3500,
+            "priceMonthly": 1209
+          },
+          {
+            "bilag_low": 3501,
+            "bilag_high": 5000,
+            "priceMonthly": 1409
+          },
+          {
+            "bilag_low": 5001,
+            "bilag_high": 10000,
+            "priceMonthly": 1679
+          },
+          {
+            "bilag_low": 10001,
+            "bilag_high": null,
+            "priceMonthly": 1999
+          }
+        ]
+      },
+      {
+        "name": "VVS",
+        "industry": "vvs",
+        "extraMonthly": 0,
+        "establishmentFee": 2200,
+        "modulesIncluded": [
+          "grossistintegrasjon",
+          "kontrollskjema",
+          "sjekklister"
+        ],
+        "bilagPricingOverride": [
+          {
+            "bilag_low": 0,
+            "bilag_high": 500,
+            "priceMonthly": 699
+          },
+          {
+            "bilag_low": 501,
+            "bilag_high": 1000,
+            "priceMonthly": 899
+          },
+          {
+            "bilag_low": 1001,
+            "bilag_high": 2000,
+            "priceMonthly": 1039
+          },
+          {
+            "bilag_low": 2001,
+            "bilag_high": 3500,
+            "priceMonthly": 1209
+          },
+          {
+            "bilag_low": 3501,
+            "bilag_high": 5000,
+            "priceMonthly": 1409
+          },
+          {
+            "bilag_low": 5001,
+            "bilag_high": 10000,
+            "priceMonthly": 1679
+          },
+          {
+            "bilag_low": 10001,
+            "bilag_high": null,
+            "priceMonthly": 1999
+          }
+        ]
+      }
+    ],
+    "userAccess": [
+      {
+        "type": "standard",
+        "description": "Full tilgang til standard moduler",
+        "monthlyPerUser": 0,
+        "establishmentPerUser": 0
+      },
+      {
+        "type": "timeføring",
+        "description": "Tilgang for å føre timer",
+        "monthlyPerUser": 39,
+        "establishmentPerUser": 100
+      },
+      {
+        "type": "lonn_reise",
+        "description": "Tilgang for lønn og reiseregning",
+        "monthlyPerUser": 65,
+        "establishmentPerUser": 250
+      },
+      {
+        "type": "sticos_faghjelp",
+        "description": "Tilgang for Sticos faghjelp",
+        "monthlyPerUser": 0,
+        "establishmentPerUser": 0
+      }
+    ],
+    "additionalModules": [
+      {
+        "module": "lager_logistikk",
+        "baseMonthly": 248,
+        "extraUserMonthly": 49,
+        "availableFor": [
+          "Smart",
+          "Pro",
+          "Komplett"
+        ]
+      }
+    ],
+    "annualCosts": [
+      {
+        "module": "årsoppgjør",
+        "pricePerYear": 990
+      }
+    ],
+    "transactionPrices": [
+      {
+        "type": "faktura_epost",
+        "pricePerTransaction": 0
+      },
+      {
+        "type": "ehf_send_motta",
+        "pricePerTransaction": 4
+      },
+      {
+        "type": "efaktura_avtalegiro",
+        "pricePerTransaction": 4
+      },
+      {
+        "type": "elektronisk_bilag",
+        "pricePerTransaction": 4
+      },
+      {
+        "type": "kid_innbetaling",
+        "pricePerTransaction": 4
+      },
+      {
+        "type": "direkte_betaling_bankintegrasjon",
+        "pricePerTransaction": 4
+      },
+      {
+        "type": "sms_purring",
+        "pricePerTransaction": 4
+      },
+      {
+        "type": "kryptert_lonnsslipp",
+        "pricePerTransaction": 4
+      },
+      {
+        "type": "brev_forsendelse",
+        "pricePerTransaction": 30
+      },
+      {
+        "type": "kredittsjekk",
+        "pricePerTransaction": 29
+      }
+    ]
+  }
+}

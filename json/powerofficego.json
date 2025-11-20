@@ -1,0 +1,131 @@
+{
+  "poweroffice_go": {
+    "packages": [
+      {
+        "name": "Regnskap",
+        "type": "monthly",
+        "baseMonthly": 385,
+        "establishmentFee": 0,
+        "bilagIncluded": "unlimited",
+        "extraBilagPrice": 0,
+        "modulesIncluded": [
+          "regnskap",
+          "fakturahandtering",
+          "mobilapp"
+        ],
+        "userAccess": {
+          "unlimitedUsersIncluded": true,
+          "usersCostExtra": false
+        },
+        "transactionPricing": [
+          {
+            "transaction": "faktura_inn_ut",
+            "price": 9
+          },
+          {
+            "transaction": "andre_bilag",
+            "price": 4
+          },
+          {
+            "transaction": "efaktura_privat",
+            "price": 3
+          }
+        ]
+      },
+      {
+        "name": "Regnskap Mikro",
+        "type": "yearly",
+        "baseYearly": 2195,
+        "establishmentFee": 0,
+        "bilagIncluded": 150,
+        "extraBilagPrice": 35,
+        "modulesIncluded": [
+          "regnskap",
+          "fakturahandtering",
+          "mobilapp"
+        ],
+        "userAccess": {
+          "unlimitedUsersIncluded": true,
+          "usersCostExtra": false
+        },
+        "transactionPricing": [
+          {
+            "transaction": "efaktura_privat",
+            "price": 3
+          }
+        ]
+      },
+      {
+        "name": "Regnskap Nano",
+        "type": "yearly",
+        "baseYearly": 995,
+        "establishmentFee": 0,
+        "bilagIncluded": 50,
+        "extraBilagPrice": 35,
+        "modulesIncluded": [
+          "regnskap",
+          "fakturahandtering",
+          "mobilapp"
+        ],
+        "userAccess": {
+          "unlimitedUsersIncluded": true,
+          "usersCostExtra": false
+        },
+        "transactionPricing": [
+          {
+            "transaction": "efaktura_privat",
+            "price": 3
+          }
+        ]
+      }
+    ],
+    "independentModules": [
+      {
+        "module": "lonn",
+        "description": "Lønn kan brukes uten andre moduler",
+        "baseMonthly": 165,
+        "perEmployeeMonthly": 35,
+        "requirements": []
+      }
+    ],
+    "additionalModules": [
+      {
+        "module": "timeregistrering",
+        "baseMonthly": 100,
+        "perUserMonthly": 50,
+        "requirements": [
+          "regnskap OR regnskap_mikro OR regnskap_nano"
+        ]
+      },
+      {
+        "module": "reiseregning",
+        "baseMonthly": 100,
+        "perUserMonthly": 50,
+        "requirements": [
+          "regnskap OR regnskap_mikro OR regnskap_nano OR lonn"
+        ]
+      },
+      {
+        "module": "ferie_og_fravaer",
+        "baseMonthly": 0,
+        "perUserMonthly": 35,
+        "requirements": [
+          "timeregistrering"
+        ]
+      }
+    ],
+    "rules": {
+      "userAccess": {
+        "defaultUnlimitedUsers": true,
+        "note": "Kun enkelte tilleggsmoduler har per-bruker-kostnad"
+      },
+      "transactionNotes": [
+        "Andre bilag kan inneholde flere transaksjoner",
+        "eFaktura til private har tilleggskostnad på 3 kr per faktura"
+      ],
+      "tax": {
+        "pricesExVAT": true
+      }
+    }
+  }
+}

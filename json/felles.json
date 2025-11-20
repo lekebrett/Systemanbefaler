@@ -1,0 +1,377 @@
+{
+    "systems": {
+        "tripletex": {
+            "packages": [
+                {
+                    "name": "Basis",
+                    "baseMonthly": 179,
+                    "establishmentFee": 0,
+                    "bilagIncluded": 500,
+                    "bilagUnlimited": false
+                },
+                {
+                    "name": "Smart",
+                    "baseMonthly": 279,
+                    "establishmentFee": 450,
+                    "bilagIncluded": 500,
+                    "bilagUnlimited": false
+                },
+                {
+                    "name": "Pro",
+                    "baseMonthly": 479,
+                    "establishmentFee": 450,
+                    "bilagIncluded": 500,
+                    "bilagUnlimited": false
+                },
+                {
+                    "name": "Komplett",
+                    "baseMonthly": 629,
+                    "establishmentFee": 450,
+                    "bilagIncluded": 500,
+                    "bilagUnlimited": false
+                }
+            ],
+            "industryAddons": [
+                {
+                    "name": "Landbruk",
+                    "requiresBasePackage": true,
+                    "bilagFollowsBase": true,
+                    "establishmentFee": 0
+                },
+                {
+                    "name": "Elektro",
+                    "requiresBasePackage": true,
+                    "bilagUnlimited": true,
+                    "bilagPricingOverride": [
+                        {
+                            "low": 0,
+                            "high": 500,
+                            "priceMonthly": 699
+                        },
+                        {
+                            "low": 501,
+                            "high": 1000,
+                            "priceMonthly": 899
+                        },
+                        {
+                            "low": 1001,
+                            "high": 2000,
+                            "priceMonthly": 1039
+                        },
+                        {
+                            "low": 2001,
+                            "high": 3500,
+                            "priceMonthly": 1209
+                        },
+                        {
+                            "low": 3501,
+                            "high": 5000,
+                            "priceMonthly": 1409
+                        },
+                        {
+                            "low": 5001,
+                            "high": 10000,
+                            "priceMonthly": 1679
+                        },
+                        {
+                            "low": 10001,
+                            "high": null,
+                            "priceMonthly": 1999
+                        }
+                    ],
+                    "establishmentFee": 450
+                },
+                {
+                    "name": "VVS",
+                    "requiresBasePackage": true,
+                    "bilagUnlimited": true,
+                    "bilagPricingOverride": [
+                        {
+                            "low": 0,
+                            "high": 500,
+                            "priceMonthly": 699
+                        },
+                        {
+                            "low": 501,
+                            "high": 1000,
+                            "priceMonthly": 899
+                        },
+                        {
+                            "low": 1001,
+                            "high": 2000,
+                            "priceMonthly": 1039
+                        },
+                        {
+                            "low": 2001,
+                            "high": 3500,
+                            "priceMonthly": 1209
+                        },
+                        {
+                            "low": 3501,
+                            "high": 5000,
+                            "priceMonthly": 1409
+                        },
+                        {
+                            "low": 5001,
+                            "high": 10000,
+                            "priceMonthly": 1679
+                        },
+                        {
+                            "low": 10001,
+                            "high": null,
+                            "priceMonthly": 1999
+                        }
+                    ],
+                    "establishmentFee": 2200
+                }
+            ],
+            "modules": [
+                {
+                    "name": "lønn",
+                    "baseMonthly": 165,
+                    "perEmployeeMonthly": 35,
+                    "requires": []
+                },
+                {
+                    "name": "timeregistrering",
+                    "baseMonthly": 100,
+                    "perUserMonthly": 50,
+                    "requires": [
+                        "package"
+                    ]
+                },
+                {
+                    "name": "reiseregning",
+                    "baseMonthly": 100,
+                    "perUserMonthly": 50,
+                    "requires": [
+                        "package OR lønn"
+                    ]
+                },
+                {
+                    "name": "ferie_og_fravaer",
+                    "baseMonthly": 0,
+                    "perUserMonthly": 35,
+                    "requires": [
+                        "timeregistrering"
+                    ]
+                },
+                {
+                    "name": "lager_logistikk",
+                    "baseMonthly": 248,
+                    "perUserMonthly": 49,
+                    "requires": [
+                        "Smart",
+                        "Pro",
+                        "Komplett"
+                    ]
+                }
+            ],
+            "transactions": [
+                {
+                    "type": "faktura_epost",
+                    "price": 0
+                },
+                {
+                    "type": "ehf_send_motta",
+                    "price": 4
+                },
+                {
+                    "type": "efaktura_avtalegiro",
+                    "price": 4
+                },
+                {
+                    "type": "elektronisk_bilag",
+                    "price": 4
+                },
+                {
+                    "type": "kid_innbetaling",
+                    "price": 4
+                },
+                {
+                    "type": "direkte_betaling_bank",
+                    "price": 4
+                },
+                {
+                    "type": "sms_purring",
+                    "price": 4
+                },
+                {
+                    "type": "kryptert_lonnsslipp",
+                    "price": 4
+                },
+                {
+                    "type": "brev_forsendelse",
+                    "price": 30
+                },
+                {
+                    "type": "kredittsjekk",
+                    "price": 29
+                }
+            ],
+            "annualCosts": [
+                {
+                    "name": "årsoppgjør",
+                    "price": 990
+                }
+            ]
+        },
+        "poweroffice_go": {
+            "packages": [
+                {
+                    "name": "Regnskap",
+                    "type": "monthly",
+                    "baseMonthly": 385,
+                    "bilagIncluded": "unlimited",
+                    "bilagUnlimited": true
+                },
+                {
+                    "name": "Regnskap Mikro",
+                    "type": "yearly",
+                    "baseYearly": 2195,
+                    "bilagIncluded": 150,
+                    "bilagUnlimited": false,
+                    "extraBilagPrice": 35
+                },
+                {
+                    "name": "Regnskap Nano",
+                    "type": "yearly",
+                    "baseYearly": 995,
+                    "bilagIncluded": 50,
+                    "bilagUnlimited": false,
+                    "extraBilagPrice": 35
+                }
+            ],
+            "modules": [
+                {
+                    "name": "lønn",
+                    "baseMonthly": 165,
+                    "perEmployeeMonthly": 35,
+                    "requires": []
+                },
+                {
+                    "name": "timeregistrering",
+                    "baseMonthly": 100,
+                    "perUserMonthly": 50,
+                    "requires": [
+                        "regnskap OR regnskap_mikro OR regnskap_nano"
+                    ]
+                },
+                {
+                    "name": "reiseregning",
+                    "baseMonthly": 100,
+                    "perUserMonthly": 50,
+                    "requires": [
+                        "regnskap OR regnskap_mikro OR regnskap_nano OR lønn"
+                    ]
+                },
+                {
+                    "name": "ferie_og_fravaer",
+                    "baseMonthly": 0,
+                    "perUserMonthly": 35,
+                    "requires": [
+                        "timeregistrering"
+                    ]
+                }
+            ],
+            "transactions": [
+                {
+                    "type": "faktura_inn_ut",
+                    "price": 9
+                },
+                {
+                    "type": "andre_bilag",
+                    "price": 4
+                },
+                {
+                    "type": "efaktura_privat",
+                    "price": 3
+                }
+            ]
+        },
+        "sparebank1_regnskap": {
+            "packages": [
+                {
+                    "name": "Basis",
+                    "baseMonthly": 159,
+                    "bilagIncludedPerYear": 150,
+                    "bilagUnlimited": false
+                },
+                {
+                    "name": "Basis+",
+                    "baseMonthly": 329,
+                    "bilagIncludedPerYear": "unlimited",
+                    "bilagUnlimited": true
+                },
+                {
+                    "name": "Komplett",
+                    "baseMonthly": 490,
+                    "bilagIncludedPerYear": "unlimited",
+                    "bilagUnlimited": true
+                }
+            ],
+            "modules": [
+                {
+                    "name": "timeregistrering",
+                    "type": "perUserMonthly",
+                    "price": 54,
+                    "requires": [
+                        "Basis+",
+                        "Komplett"
+                    ]
+                },
+                {
+                    "name": "fravær",
+                    "type": "perItem",
+                    "price": 4,
+                    "requires": [
+                        "Basis+",
+                        "Komplett"
+                    ]
+                }
+            ],
+            "transactions": [
+                {
+                    "type": "betaling",
+                    "price": 4
+                },
+                {
+                    "type": "faktura",
+                    "price": 8
+                },
+                {
+                    "type": "efaktura",
+                    "price": 8
+                },
+                {
+                    "type": "fakturaprint",
+                    "price": 25
+                }
+            ],
+            "userTypes": [
+                {
+                    "type": "ekstra_bruker",
+                    "priceMonthly": 54
+                },
+                {
+                    "type": "timebruker",
+                    "priceMonthly": 54
+                }
+            ],
+            "usagePricing": [
+                {
+                    "item": "reiseregning",
+                    "pricePerItem": 33
+                },
+                {
+                    "item": "fraværsregistrering",
+                    "pricePerItem": 4
+                },
+                {
+                    "item": "lønnsslipp",
+                    "pricePerItem": 39
+                }
+            ]
+        }
+    }
+}
