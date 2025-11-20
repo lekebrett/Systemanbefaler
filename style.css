@@ -72,20 +72,6 @@ body {
     letter-spacing: -0.5px;
 }
 
-.title-with-logo {
-    display: inline-flex;
-    align-items: centert;
-    gap: 6px;
-    white-space: nowrap;
-}
-
-.title-with-logo h3 {
-    margin: 0;
-}
-
-.sb1-logo {
-    height: 20px;
-}
 
 .status-badge {
     font-size: 0.75rem;
