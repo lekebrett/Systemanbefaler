@@ -45,10 +45,23 @@ body {
 .nav-grid {
     max-width: 1400px;
     margin: 0 auto;
+    padding: 0 2rem;
     display: grid;
+    /* Grid: 380px left sidebar area, 1fr content area */
     grid-template-columns: 380px 1fr;
     gap: 2rem;
-    padding: 0 2rem;
+    align-items: center;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.nav-right {
+    display: flex;
+    justify-content: flex-end;
+    /* Pushes status icon to the far right */
     align-items: center;
 }
 
@@ -58,6 +71,63 @@ body {
     color: var(--sb1-blue-dark);
     letter-spacing: -0.5px;
 }
+
+.title-with-logo {
+    display: inline-flex;
+    align-items: centert;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.title-with-logo h3 {
+    margin: 0;
+}
+
+.sb1-logo {
+    height: 20px;
+}
+
+.status-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.3s;
+    cursor: default;
+}
+
+.status-connected {
+    background: #e6fffa;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+}
+
+.status-connected::after {
+    content: "Supabase 🟢";
+}
+
+.status-fallback {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.status-fallback::after {
+    content: "Supabase 🔴";
+}
+
+.status-loading {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.status-loading::after {
+    content: "Kobler til...";
+}
+
 
 /* LAYOUT */
 .dashboard-grid {
@@ -77,6 +147,8 @@ body {
 
     .nav-grid {
         grid-template-columns: 1fr;
+        display: flex;
+        justify-content: space-between;
     }
 }
 
@@ -154,12 +226,11 @@ input[type=number]::-webkit-outer-spin-button {
     font-weight: 500;
 }
 
-/* --- NEW SLIDER STYLING (CUSTOM BOX SHAPE) --- */
+/* SLIDERS */
 .slider-wrapper {
     margin-top: 0.5rem;
 }
 
-/* Reset default appearance */
 input[type=range].styled-slider {
     -webkit-appearance: none;
     width: 100%;
@@ -168,7 +239,6 @@ input[type=range].styled-slider {
     border-radius: 999px;
 }
 
-/* Webkit (Chrome, Safari, Edge) */
 input[type=range].styled-slider::-webkit-slider-runnable-track {
     width: 100%;
     height: 12px;
@@ -181,18 +251,15 @@ input[type=range].styled-slider::-webkit-slider-thumb {
     height: 16px;
     width: 24px;
     border-radius: 6px;
-    /* Box shape with rounded corners */
     background: var(--sb1-white);
     border: 2px solid var(--sb1-blue-dark);
     margin-top: -2px;
-    /* Centers thumb on 12px track: (12-16)/2 = -2 */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s;
     position: relative;
     z-index: 2;
 }
 
-/* Firefox */
 input[type=range].styled-slider::-moz-range-track {
     width: 100%;
     height: 12px;
@@ -204,7 +271,6 @@ input[type=range].styled-slider::-moz-range-thumb {
     height: 16px;
     width: 24px;
     border-radius: 6px;
-    /* Box shape for Firefox too */
     background: var(--sb1-white);
     border: 2px solid var(--sb1-blue-dark);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -274,12 +340,11 @@ input:checked+.slider-switch:before {
 }
 
 .collapsed-content.open {
-    max-height: 200px;
+    max-height: 500px;
     opacity: 1;
     margin-top: 1.5rem;
 }
 
-/* SELECT & CHECKBOX */
 .select-wrapper select {
     width: 100%;
     padding: 0.8rem;
@@ -414,7 +479,7 @@ input:checked+.slider-switch:before {
 }
 
 .card-header h3 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-bottom: 0.5rem;
     color: var(--sb1-blue-dark);
 }
@@ -425,7 +490,6 @@ input:checked+.slider-switch:before {
     gap: 6px;
 }
 
-/* CLICKABLE PILLS */
 .package-pill {
     display: inline-block;
     background: #f0f2f5;
@@ -580,7 +644,6 @@ input:checked+.slider-switch:before {
     line-height: 1.5;
 }
 
-/* --- MODAL STYLING --- */
 .hidden {
     display: none !important;
 }

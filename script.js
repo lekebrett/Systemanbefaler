@@ -1,5 +1,10 @@
-// --- DATASETS ---
-const RAW_DATA = {
+// --- SUPABASE CONFIG ---
+const SUPABASE_URL = 'https://vidzpqjmckqeerkgcwsf.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_z898kIhuxnrSsviX-ZqicA_DiF7Es1W';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// --- FALLBACK DATA ---
+let SYSTEM_DATA = {
     "tripletex": {
         "packages": [
             {
@@ -41,19 +46,9 @@ const RAW_DATA = {
     },
     "poweroffice_go": {
         "packages": [
-            {
-                "name": "Regnskap", "type": "monthly", "baseMonthly": 385, "bilagIncluded": "unlimited",
-                "features": ["Ubegrenset bilag", "Fakturering", "Bankintegrasjon", "Rapportering", "Mobilapp"],
-                "transactionPricing": [{ "transaction": "mix", "price": 9 }]
-            },
-            {
-                "name": "Regnskap Mikro", "type": "yearly", "baseYearly": 2195, "bilagIncluded": 150, "extraBilagPrice": 35,
-                "features": ["Inntil 150 bilag/år", "Fakturering", "Enkel bank", "Mobilapp"]
-            },
-            {
-                "name": "Regnskap Nano", "type": "yearly", "baseYearly": 995, "bilagIncluded": 50, "extraBilagPrice": 35,
-                "features": ["Inntil 50 bilag/år", "Fakturering", "Enkel bank", "Mobilapp"]
-            }
+            { "name": "Regnskap", "type": "monthly", "baseMonthly": 385, "bilagIncluded": "unlimited", "features": ["Standard"], "transactionPricing": [{ "transaction": "mix", "price": 9 }] },
+            { "name": "Regnskap Mikro", "type": "yearly", "baseYearly": 2195, "bilagIncluded": 150, "extraBilagPrice": 35, "features": ["Mikro"] },
+            { "name": "Regnskap Nano", "type": "yearly", "baseYearly": 995, "bilagIncluded": 50, "extraBilagPrice": 35, "features": ["Nano"] }
         ],
         "independentModules": [{ "module": "lonn", "baseMonthly": 165, "perEmployeeMonthly": 35 }],
         "additionalModules": [
@@ -63,9 +58,9 @@ const RAW_DATA = {
     },
     "sparebank1_regnskap": {
         "packages": [
-            { "name": "Basis", "baseMonthly": 159, "features": ["Fakturering", "Enkel bilagsføring", "Inntil 150 bilag/år", "Bankintegrasjon"] },
-            { "name": "Basis+", "baseMonthly": 329, "features": ["Ubegrenset bilag", "Lønnsmodul", "Avansert salg", "Purring & Inkasso", "Redigerbar kontoplan"] },
-            { "name": "Komplett", "baseMonthly": 490, "features": ["Alt i Basis+", "Viderefakturering", "Godkjenningsflyt", "Fordelingsnøkler", "Prosjekt/Avdeling", "Avansert datauttrekk"] }
+            { "name": "Basis", "baseMonthly": 159, "features": ["Basis"] },
+            { "name": "Basis+", "baseMonthly": 329, "features": ["Basis+"] },
+            { "name": "Komplett", "baseMonthly": 490, "features": ["Komplett"] }
         ],
         "additionalModules": [
             { "module": "timeregistrering", "price": 54, "type": "perUserMonthly" },
@@ -74,92 +69,132 @@ const RAW_DATA = {
         "usagePricing": [
             { "item": "reiseregning", "pricePerItem": 33 },
             { "item": "lønnsslipp", "pricePerItem": 39 }
-        ]
+        ],
+        "transactions": [{ "type": "mix", "price": 8 }]
     }
 };
 
-// --- CONSTANTS & CONFIG ---
-const FEES = { NEW_CUSTOMER: 3890, SWITCH_SYSTEM: 1789 };
+let GLOBAL_SETTINGS = {
+    fees: { newCustomer: 3890, switchSystem: 1789 },
+    texts: {
+        siteTitle: "Systemkalkulator",
+        pageTitle: "Priskalkulator Regnskap",
+        setupNew: "Ny kunde (Oppstart)",
+        setupSwitch: "Bytte system",
+        footerDisclaimer: "* Prisene er estimater ekskl. mva..."
+    }
+};
+
 const CARD_IDS = { "Tripletex": "card-tripletex", "PowerOffice": "card-po", "SB1": "card-sb1" };
 
 // --- INIT --- 
-document.addEventListener('DOMContentLoaded', () => {
-    // Sliders with color fill
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadConfig();
     setupSlider('bilag-input', 'bilag-slider');
     setupSlider('users-input', 'users-slider');
     setupSlider('ansatte-input', 'ansatte-slider');
 
-    // Payroll toggle
     const checkPayroll = document.getElementById('check-payroll');
     const options = document.getElementById('payroll-container');
-    if (checkPayroll.checked) {
-        options.classList.add('open');
-        options.style.opacity = 1;
-        options.style.maxHeight = "200px";
-    }
-    checkPayroll.addEventListener('change', () => {
+
+    const togglePayrollUI = () => {
         if (checkPayroll.checked) { options.classList.add('open'); }
         else { options.classList.remove('open'); }
         updateAll();
-    });
+    };
+    checkPayroll.addEventListener('change', togglePayrollUI);
+    if (checkPayroll.checked) options.classList.add('open');
 
-    // Global listeners
     document.querySelectorAll('input, select').forEach(el => el.addEventListener('change', updateAll));
-
-    // Initial Calc
+    document.querySelectorAll('input[name="setup-type"]').forEach(el => el.addEventListener('change', updateAll));
     updateAll();
 });
+
+// --- SUPABASE FETCH ---
+async function loadConfig() {
+    const statusBadge = document.getElementById('db-status');
+    try {
+        const { data, error } = await supabase.from('calculator_config').select('*');
+        if (error) throw error;
+        if (data && data.length > 0) {
+            const tt = data.find(r => r.key === 'tripletex');
+            const po = data.find(r => r.key === 'poweroffice_go');
+            const sb1 = data.find(r => r.key === 'sparebank1_regnskap');
+            const settings = data.find(r => r.key === 'global_settings');
+
+            if (tt) SYSTEM_DATA.tripletex = tt.value;
+            if (po) SYSTEM_DATA.poweroffice_go = po.value;
+            if (sb1) SYSTEM_DATA.sparebank1_regnskap = sb1.value;
+            if (settings) { GLOBAL_SETTINGS = settings.value; applyGlobalSettings(); }
+
+            statusBadge.className = "status-badge status-connected";
+            statusBadge.title = "Koblet til database";
+        }
+    } catch (err) {
+        console.warn("Supabase feil:", err);
+        statusBadge.className = "status-badge status-fallback";
+        statusBadge.title = "Bruker lokal data";
+        applyGlobalSettings();
+    }
+}
+
+function applyGlobalSettings() {
+    if (GLOBAL_SETTINGS.texts) {
+        if (GLOBAL_SETTINGS.texts.pageTitle) document.title = GLOBAL_SETTINGS.texts.pageTitle;
+        if (GLOBAL_SETTINGS.texts.siteTitle) document.getElementById('site-logo-text').innerText = GLOBAL_SETTINGS.texts.siteTitle;
+        if (GLOBAL_SETTINGS.texts.footerDisclaimer) document.getElementById('footer-disclaimer').innerText = GLOBAL_SETTINGS.texts.footerDisclaimer;
+        if (GLOBAL_SETTINGS.texts.setupNew) document.getElementById('txt-setup-new').innerText = GLOBAL_SETTINGS.texts.setupNew;
+        if (GLOBAL_SETTINGS.texts.setupSwitch) document.getElementById('txt-setup-switch').innerText = GLOBAL_SETTINGS.texts.setupSwitch;
+    }
+    if (GLOBAL_SETTINGS.fees) {
+        document.getElementById('price-setup-new').innerText = `Etablering: ${GLOBAL_SETTINGS.fees.newCustomer},-`;
+        document.getElementById('price-setup-switch').innerText = `Etablering: ${GLOBAL_SETTINGS.fees.switchSystem},-`;
+    }
+    if (GLOBAL_SETTINGS.images && GLOBAL_SETTINGS.images.favicon) {
+        let link = document.querySelector("link[rel~='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.getElementsByTagName('head')[0].appendChild(link);
+        }
+        link.href = GLOBAL_SETTINGS.images.favicon;
+    }
+}
 
 function setupSlider(numId, rangeId) {
     const num = document.getElementById(numId);
     const range = document.getElementById(rangeId);
-
-    // Function to update color fill
     const updateFill = () => {
         const percentage = ((range.value - range.min) / (range.max - range.min)) * 100;
         range.style.background = `linear-gradient(to right, #4195d1 ${percentage}%, #ebeff5 ${percentage}%)`;
     };
-
-    // Event listeners
     num.addEventListener('input', () => { range.value = num.value; updateFill(); updateAll(); });
     range.addEventListener('input', () => { num.value = range.value; updateFill(); updateAll(); });
-
-    // Init color
     updateFill();
 }
 
-// --- MODAL LOGIC ---
 function openModal(systemName, packageName) {
     const modal = document.getElementById('package-modal');
-    const overlay = document.getElementById('modal-overlay');
-    const title = document.getElementById('modal-title');
-    const subtitle = document.getElementById('modal-system');
     const list = document.getElementById('modal-features-list');
 
     let features = [];
-    let sysKey = "";
-    if (systemName === "Tripletex") sysKey = "tripletex";
-    if (systemName === "PowerOffice") sysKey = "poweroffice_go";
-    if (systemName === "SB1") sysKey = "sparebank1_regnskap";
+    let sysKey = systemName === "Tripletex" ? "tripletex" : (systemName === "PowerOffice" ? "poweroffice_go" : "sparebank1_regnskap");
 
-    const dataset = RAW_DATA[sysKey];
+    const dataset = SYSTEM_DATA[sysKey];
     const pack = dataset.packages.find(p => p.name === packageName);
-    if (pack && pack.features) {
-        features = pack.features;
-    }
+    if (pack && pack.features) features = pack.features;
+
     if (features.length === 0 && dataset.industryAddons) {
         const addon = dataset.industryAddons.find(a => a.name === packageName);
         if (addon && addon.features) features = addon.features;
     }
 
-    title.innerText = packageName;
-    subtitle.innerText = systemName;
-    list.innerHTML = features.length > 0
-        ? features.map(f => `<li>${f}</li>`).join('')
-        : `<li>Ingen detaljert info tilgjengelig for denne pakken.</li>`;
+    document.getElementById('modal-title').innerText = packageName;
+    document.getElementById('modal-system').innerText = systemName;
+    list.innerHTML = features.length > 0 ? features.map(f => `<li>${f}</li>`).join('') : `<li>Ingen info.</li>`;
 
     modal.classList.remove('hidden');
-    overlay.classList.remove('hidden');
+    document.getElementById('modal-overlay').classList.remove('hidden');
 }
 
 function closeModal() {
@@ -167,7 +202,6 @@ function closeModal() {
     document.getElementById('modal-overlay').classList.add('hidden');
 }
 
-// --- CALCULATION --- 
 function updateAll() {
     const state = {
         bilag: parseInt(document.getElementById('bilag-input').value) || 0,
@@ -195,10 +229,10 @@ function updateAll() {
     rankSystems([tt, po, sb1], state);
 }
 
-// --- TRIPLE TEX LOGIC ---
 function calcTripletex(state) {
-    const d = RAW_DATA.tripletex;
+    const d = SYSTEM_DATA.tripletex;
     let res = { name: "Tripletex", monthly: 0, establish: 0, userEstablish: 0, year1: 0, packages: [], warnings: [], details: [], txCount: 0, txCost: 0 };
+
     let basePackageName = "Basis";
     if (state.hasLonn || state.mod.travel || state.mod.time || state.mod.logistics || state.mod.project) {
         basePackageName = "Smart";
@@ -211,58 +245,49 @@ function calcTripletex(state) {
     if (['elektro', 'vvs'].includes(state.industry)) {
         const addon = d.industryAddons.find(a => a.industry === state.industry);
         res.packages.push(addon.name);
-        res.establish += addon.establishmentFee;
+        res.establish += addon.establishmentFee || 0;
         const tier = addon.bilagPricingOverride.find(t => state.bilag >= t.bilag_low && (t.bilag_high === null || state.bilag <= t.bilag_high));
         res.monthly += tier ? tier.priceMonthly : 2000;
-        // Elektro/VVS typically Smart-based or higher
         packageUserPrice = 99;
     } else {
         const pack = d.packages.find(p => p.name === basePackageName);
         res.packages.push(pack.name);
-        res.monthly += pack.baseMonthly;
-        res.establish += pack.establishmentFee;
+        res.monthly += pack.baseMonthly || 0;
+        res.establish += pack.establishmentFee || 0;
         if (state.bilag > 500 && pack.bilagPricing) {
             const tier = pack.bilagPricing.find(t => state.bilag >= t.bilag_low && (t.bilag_high === null || state.bilag <= t.bilag_high));
             if (tier) res.monthly += tier.priceMonthly;
         }
         if (state.industry === 'landbruk') res.packages.push("Landbruk");
 
-        packageUserPrice = pack.userMonthly;
-        packageUserEst = pack.userEst;
+        packageUserPrice = pack.userMonthly || 0;
+        packageUserEst = pack.userEst || 0;
     }
 
-    // System User Cost (Updated logic: Show details even if 0)
+    // System Users
     if (state.systemUsers > 0) {
         res.monthly += (packageUserPrice * state.systemUsers);
-
-        // Track user establishment separately
         let currentUserEst = (packageUserEst * state.systemUsers);
         res.userEstablish += currentUserEst;
         res.establish += currentUserEst;
-
-        let priceLabel = packageUserPrice > 0 ? `${packageUserPrice} kr` : "0 kr";
+        let priceLabel = `${packageUserPrice} kr`;
         res.details.push(`${state.systemUsers} systembrukere (${priceLabel})`);
     }
 
-    // Access Addons
     if (state.hasLonn || state.mod.travel) {
         const access = d.userAccess.find(u => u.type === 'lonn_reise');
         res.monthly += (access.monthlyPerUser * state.employees);
-
-        let currentAccessEst = (access.establishmentPerUser * state.employees);
-        res.userEstablish += currentAccessEst;
-        res.establish += currentAccessEst;
-
+        let accEst = (access.establishmentPerUser || 0) * state.employees;
+        res.userEstablish += accEst;
+        res.establish += accEst;
         res.packages.push("Lønn/Reise-tilgang");
     }
     if (state.mod.time) {
         const access = d.userAccess.find(u => u.type === 'timeføring');
         res.monthly += (access.monthlyPerUser * state.employees);
-
-        let currentAccessEst = (access.establishmentPerUser * state.employees);
-        res.userEstablish += currentAccessEst;
-        res.establish += currentAccessEst;
-
+        let accEst = (access.establishmentPerUser || 0) * state.employees;
+        res.userEstablish += accEst;
+        res.establish += accEst;
         res.packages.push("Time-tilgang");
     }
     if (state.mod.logistics) {
@@ -272,16 +297,15 @@ function calcTripletex(state) {
     }
     res.txCount = state.bilag;
     res.txCost = state.bilag * 8;
-    const annual = d.annualCosts[0].pricePerYear;
+    const annual = d.annualCosts[0].pricePerYear || 0;
     res.year1 = (res.monthly * 12) + res.establish + annual + res.txCost;
     if (state.hasLonn) res.details.push(`Lønn (${state.employees} ansatte)`);
     if (state.mod.time) res.details.push("Timeføring");
     return res;
 }
 
-// --- POWEROFFICE LOGIC ---
 function calcPowerOffice(state) {
-    const d = RAW_DATA.poweroffice_go;
+    const d = SYSTEM_DATA.poweroffice_go;
     let res = { name: "PowerOffice", monthly: 0, establish: 0, year1: 0, packages: [], warnings: [], details: [], txCount: 0, txCost: 0 };
     const needsAccounting = state.bilag > 0 || state.mod.time || state.mod.project || state.mod.logistics || (state.mod.travel && !state.hasLonn);
     let packName = null;
@@ -315,10 +339,7 @@ function calcPowerOffice(state) {
     if (state.industry === 'landbruk') res.packages.push("Landbruk");
     if (state.mod.logistics) res.warnings.push("Mangler lager/logistikk");
     if (['elektro', 'vvs'].includes(state.industry)) res.warnings.push(`Ikke spesialisert for ${state.industry}`);
-
-    // POG Users are 0kr
     if (state.systemUsers > 0) res.details.push(`${state.systemUsers} systembrukere (0 kr)`);
-
     let modMonthly = 0;
     if (state.hasLonn) {
         const m = d.independentModules.find(x => x.module === 'lonn');
@@ -343,17 +364,14 @@ function calcPowerOffice(state) {
     return res;
 }
 
-// --- SB1 LOGIC ---
 function calcSB1(state) {
-    const d = RAW_DATA.sparebank1_regnskap;
+    const d = SYSTEM_DATA.sparebank1_regnskap;
     let res = { name: "SB1", monthly: 0, establish: 0, year1: 0, packages: [], warnings: [], details: [], txCount: state.bilag, txCost: 0 };
     let packName = "Basis";
     if (state.bilag > 150 || state.mod.time || state.mod.project || state.hasLonn) { packName = "Basis+"; }
     const pack = d.packages.find(p => p.name === packName);
     res.packages.push(pack.name);
     res.monthly += pack.baseMonthly;
-
-    // User Cost (1st free)
     if (state.systemUsers > 1) {
         let extraUsers = state.systemUsers - 1;
         let extraCost = extraUsers * 54;
@@ -362,7 +380,6 @@ function calcSB1(state) {
     } else if (state.systemUsers === 1) {
         res.details.push(`1 systembruker (inkludert)`);
     }
-
     if (state.industry === 'landbruk') res.packages.push("Landbruk");
     if (state.mod.logistics) res.warnings.push("Mangler lager/logistikk");
     if (['elektro', 'vvs'].includes(state.industry)) res.warnings.push(`Ikke spesialisert for ${state.industry}`);
@@ -386,23 +403,20 @@ function calcSB1(state) {
     }
     res.monthly += fixedMod;
     res.monthly += (usageYearly / 12);
-    res.txCount = state.bilag * 6;
+    res.txCost = state.bilag * 8;
     res.year1 = (pack.baseMonthly * 12) + (fixedMod * 12) + usageYearly + res.txCost;
     return res;
 }
 
-// --- RENDER (Updated for Modal) --- 
 function renderCard(prefix, data, state) {
-    // Render packages as clickable pills
-    const container = document.getElementById(`${prefix}-packages`);
-    container.innerHTML = data.packages.map(p =>
+    document.getElementById(`${prefix}-packages`).innerHTML = data.packages.map(p =>
         `<span class="package-pill clickable" onclick="openModal('${data.name}', '${p}')">${p}</span>`
     ).join('');
 
     document.getElementById(`${prefix}-monthly`).innerText = Math.round(data.monthly).toLocaleString();
 
-    let customerSetupFee = state.setupType === 'new' ? FEES.NEW_CUSTOMER : FEES.SWITCH_SYSTEM;
-    let customerSetupName = state.setupType === 'new' ? "(Oppstart)" : "(Bytte)";
+    let customerSetupFee = state.setupType === 'new' ? GLOBAL_SETTINGS.fees.newCustomer : GLOBAL_SETTINGS.fees.switchSystem;
+    let customerSetupName = state.setupType === 'new' ? GLOBAL_SETTINGS.texts.setupNew : GLOBAL_SETTINGS.texts.setupSwitch;
 
     const setupContainer = document.getElementById(`${prefix}-setup-container`);
     setupContainer.innerHTML = "";
@@ -412,7 +426,6 @@ function renderCard(prefix, data, state) {
     row1.innerHTML = `<span>Oppstart <span style="font-size:0.8em">${customerSetupName}</span>:</span> <span>${customerSetupFee.toLocaleString()} kr</span>`;
     setupContainer.appendChild(row1);
 
-    // Logic to split "System" and "User" establishment lines for Tripletex
     if (data.establish > 0) {
         let userEst = data.userEstablish || 0;
         let sysEst = data.establish - userEst;
@@ -459,7 +472,7 @@ function rankSystems(results, state) {
         card.querySelector('.badges-container').innerHTML = '';
     });
 
-    let setupFee = state.setupType === 'new' ? FEES.NEW_CUSTOMER : FEES.SWITCH_SYSTEM;
+    let setupFee = state.setupType === 'new' ? GLOBAL_SETTINGS.fees.newCustomer : GLOBAL_SETTINGS.fees.switchSystem;
     const sorted = [...results].sort((a, b) => (a.year1 + setupFee) - (b.year1 + setupFee));
     const cheapest = sorted[0];
     const cCard = getCardEl(cheapest.name);

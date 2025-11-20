@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Priskalkulator Regnskap</title>
+    <title>Laster...</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Favicon placeholder, oppdateres av JS -->
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap"
@@ -17,8 +19,12 @@
 
     <nav class="glass-header">
         <div class="nav-grid">
-            <div class="logo-container">
-                <div class="logo">Systemkalkulator</div>
+            <div class="nav-left">
+                <div class="logo" id="site-logo-text">Systemkalkulator</div>
+            </div>
+            <div class="nav-right">
+                <!-- Status flyttet hit -->
+                <div id="db-status" class="status-badge status-loading" title="Kobler til database..."></div>
             </div>
         </div>
     </nav>
@@ -28,7 +34,7 @@
         <!-- CONTROLS -->
         <section class="controls-panel">
 
-            <!-- 1. VOLUM & BRUKERE -->
+            <!-- 1. BILAGSVOLUM -->
             <div class="glass-card">
                 <div class="group-header">
                     <label>1. Volum & Brukere</label>
@@ -40,12 +46,12 @@
                     <span class="unit-label" id="bilag-unit-text">bilag / år</span>
                 </div>
                 <div class="slider-wrapper">
-                    <input type="range" id="bilag-slider" class="styled-slider" min="0" max="10000" value="0" step="10">
+                    <input type="range" id="bilag-slider" class="styled-slider" min="0" max="5000" value="0" step="10">
                 </div>
 
                 <div class="input-spacer"></div>
 
-                <!-- NYTT FELT: Systembrukere -->
+                <!-- Systembrukere -->
                 <label class="sub-label">Antall systembrukere (Admin/Regnskap)</label>
                 <div class="interactive-input-wrapper">
                     <input type="number" id="users-input" value="1" min="0" max="50">
@@ -77,6 +83,23 @@
                         <input type="range" id="ansatte-slider" class="styled-slider" min="1" max="50" value="1"
                             step="1">
                     </div>
+
+                    <!-- Time/Reise -->
+                    <div class="checkbox-group" style="margin-top: 1.5rem;">
+                        <label class="checkbox-card-wrapper">
+                            <input type="checkbox" id="check-time">
+                            <div class="check-content">
+                                <span class="check-title">Timeføring</span>
+                            </div>
+                        </label>
+
+                        <label class="checkbox-card-wrapper">
+                            <input type="checkbox" id="check-travel">
+                            <div class="check-content">
+                                <span class="check-title">Reiseregning</span>
+                            </div>
+                        </label>
+                    </div>
                 </div>
             </div>
 
@@ -94,20 +117,6 @@
                 </div>
 
                 <div class="checkbox-group">
-                    <label class="checkbox-card-wrapper">
-                        <input type="checkbox" id="check-time">
-                        <div class="check-content">
-                            <span class="check-title">Timeføring</span>
-                        </div>
-                    </label>
-
-                    <label class="checkbox-card-wrapper">
-                        <input type="checkbox" id="check-travel">
-                        <div class="check-content">
-                            <span class="check-title">Reiseregning</span>
-                        </div>
-                    </label>
-
                     <label class="checkbox-card-wrapper">
                         <input type="checkbox" id="check-project">
                         <div class="check-content">
@@ -132,15 +141,15 @@
                     <label class="radio-card">
                         <input type="radio" name="setup-type" value="new" checked>
                         <div class="radio-content">
-                            <span class="radio-title">Ny kunde (Oppstart)</span>
-                            <span class="radio-desc">Etablering: 3 890,-</span>
+                            <span class="radio-title" id="txt-setup-new">Ny kunde (Oppstart)</span>
+                            <span class="radio-desc" id="price-setup-new">Etablering: -</span>
                         </div>
                     </label>
                     <label class="radio-card">
                         <input type="radio" name="setup-type" value="switch">
                         <div class="radio-content">
-                            <span class="radio-title">Bytte system</span>
-                            <span class="radio-desc">Etablering: 1 789,-</span>
+                            <span class="radio-title" id="txt-setup-switch">Bytte system</span>
+                            <span class="radio-desc" id="price-setup-switch">Etablering: -</span>
                         </div>
                     </label>
                 </div>
@@ -210,7 +219,12 @@
                 <div class="pricing-card" id="card-sb1">
                     <div class="badges-container"></div>
                     <div class="card-header">
-                        <h3>Sparebank 1 Regnskap</h3>
+                        <div class="title-with-logo">
+                            <h3>Sparebank 1 Regnskap</h3>
+                            <img src="https://cdn.brandfetch.io/idZgs8RQ-x/theme/dark/icon.svg?c=1bxid64Mup7aczewSAYMX&t=1740405325626"
+                                alt="Logo" class="sb1-logo">
+                        </div>
+
                         <div class="package-container" id="sb1-packages"></div>
                     </div>
                     <div class="card-body">
@@ -234,23 +248,20 @@
 
             </div>
 
-            <p class="disclaimer">
-                * Prisene er estimater ekskl. mva. "Totalt år 1" inkluderer månedskostnader x 12 pluss valgt
-                etableringsgebyr og systemspesifikke kostnader. Faktiske transaksjonskostnader vil variere etter bruk.
+            <p class="disclaimer" id="footer-disclaimer">
+                * Prisene er estimater ekskl. mva...
             </p>
         </section>
     </main>
 
-    <!-- MODAL FOR PACKAGE DETAILS -->
+    <!-- MODAL -->
     <div id="package-modal" class="modal hidden">
         <div class="modal-content glass-card">
             <button class="close-modal" onclick="closeModal()">×</button>
             <h3 id="modal-title">Pakkenavn</h3>
             <p class="modal-subtitle" id="modal-system">Systemnavn</p>
             <div class="modal-body">
-                <ul id="modal-features-list">
-                    <!-- Fylles via JS -->
-                </ul>
+                <ul id="modal-features-list"></ul>
             </div>
         </div>
     </div>
