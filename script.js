@@ -79,7 +79,7 @@ let GLOBAL_SETTINGS = {
     texts: {
         siteTitle: "Systemkalkulator",
         pageTitle: "Priskalkulator Regnskap",
-        setupNew: "Ny kunde",
+        setupNew: "Ny kunde (Oppstart)",
         setupSwitch: "Bytte system",
         footerDisclaimer: "* Prisene er estimater ekskl. mva..."
     }
