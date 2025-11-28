@@ -1,3 +1,43 @@
+/* 800 – Logo / Overskrift */
+@font-face {
+    font-family: "SpareBank1";
+    src: url("/fonts/SpareBank1Title-Regular-Web.woff2") format("woff2"),
+         url("/fonts/SpareBank1Title-Regular-Web.woff") format("woff");
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* 700 – Regular */
+@font-face {
+    font-family: "SpareBank1";
+    src: url("/fonts/SpareBank1-Regular-Web.woff2") format("woff2"),
+         url("/fonts/SpareBank1-Regular-Web.woff") format("woff");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* 600 – Bold */
+@font-face {
+    font-family: "SpareBank1";
+    src: url("/fonts/SpareBank1-Bold-Web.woff2") format("woff2"),
+         url("/fonts/SpareBank1-Bold-Web.woff") format("woff");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* 500 – Regular */
+@font-face {
+    font-family: "SpareBank1";
+    src: url("/fonts/SpareBank1-Regular-Web.woff2") format("woff2"),
+         url("/fonts/SpareBank1-Regular-Web.woff") format("woff");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
     --sb1-blue-dark: #002F5F;
     --sb1-blue-light: #4195D1;
@@ -25,7 +65,7 @@
 }
 
 body {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'SpareBank1', sans-serif;
     background: var(--sb1-bg-gradient);
     color: var(--sb1-text);
     min-height: 100vh;
@@ -192,7 +232,7 @@ input[type=number] {
     font-weight: 800;
     color: var(--sb1-blue-dark);
     width: 140px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'SpareBank1', sans-serif;
 }
 
 input[type=number]:focus {
@@ -340,7 +380,7 @@ input:checked+.slider-switch:before {
     margin-bottom: 1rem;
     background: #f9fafb;
     cursor: pointer;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'SpareBank1', sans-serif;
 }
 
 .checkbox-group,
