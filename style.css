@@ -631,11 +631,11 @@ input:checked+.slider-switch:before {
 
 .year-one span {
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 1.8rem;
 }
 
 .year-one strong {
-    font-size: 1.2rem;
+    font-size: 2.2rem;
     color: var(--sb1-blue-dark);
 }
 
